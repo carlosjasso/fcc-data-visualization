@@ -1,5 +1,7 @@
+const dataURL = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json";
+
 function onDOMContentLoaded() {
-    fetch("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json")
+    fetch(dataURL)
     .then(response => response.json())
     .then(json => {
         // Data definition

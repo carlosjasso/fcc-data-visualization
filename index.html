@@ -33,24 +33,32 @@
             <section class="list-box">
                 <ul>
                     <li>
-                        <a class="project-link" key="01">Visualize Data with a Bar Chart</a>
+                        <a class="project-link" key="01">Bar Chart</a>
+                    </li>
+                    <li>
+                        <a class="project-link" key="02">Scatterplot Graph</a>
                     </li>
                 </ul>
             </section>
         </main>
         <script>
             const links = {
-                "01": "/bar-chart"
+                "01": "/bar-chart",
+                "02": "/scatterplot-graph"
             }
 
             document.addEventListener("DOMContentLoaded", () => {
-                const branch = window.location.hostname === "carlosjasso.github.io" ? "/fcc-data-visualization" : "";
+                const repoName = "/fcc-data-visualization";
+                const validHostnames = ["carlosjasso.github.io", "carlosjasso.dev"];
+                const branch = validHostnames.includes(window.location.hostname) ? repoName : "";
+                
                 const anchors = document.getElementsByClassName("project-link");
+                
                 for (let index = 0; index < anchors.length; index++) {
                     const anchor = anchors[index];
                     const anchorKey = anchor.getAttribute("key");
                     const href = `${ branch }${ links[anchorKey] }`;
-                    console.log(href);
+                    
                     anchor.setAttribute("href", href);
                 }
             })
