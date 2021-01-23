@@ -5,16 +5,20 @@ function onDOMContentLoaded() {
     .then(text => text.json())
     .then(json => {
         // Data definition
-        const dataSet = [...json];
+        const dataSet = json.map(item => {
+            const splitTime = item.Time.split(":");
+            item.Time = new Date(Date.UTC(2021, 0, 1, 0, splitTime[0], splitTime[1]));
+            return item;
+        });
         console.log(dataSet);
         const timeFormat = d3.timeFormat("%M:%S");
 
         // SVG Props
         const margin = {
                 top: 10,
-                right: 10,
+                right: 0,
                 bottom: 20,
-                left: 10
+                left: 40
             },
             width = 800,
             height = 400;
@@ -44,17 +48,30 @@ function onDOMContentLoaded() {
         const timeMin = d3.min(dataSet, item => item.Time);
         const timeMax = d3.max(dataSet, item => item.Time);
         const timeScale = d3.scaleTime()
-            .domain([timeMax, timeMin])
+            .domain([timeMin, timeMax])
             .range([margin.top, (height - margin.top - margin.bottom)]);
         const timeAxis = d3.axisLeft()
-            .scale(timeScale);
+            .scale(timeScale)
+            .tickFormat(timeFormat);
         
         svg.append("g")
             .call(timeAxis)
             .attr("id", "y-axis")
-            .attr("transform", `translate(50, ${ margin.top })`);
+            .attr("transform", `translate(${ margin.left }, ${ margin.top })`);
         
-        
+        // dots
+        svg.selectAll(".dot")
+            .data(dataSet)
+            .enter()
+            .append("circle")
+            .attr("class", "dot")
+            .attr("r", 5)
+            .attr("cx", data => yearScale(data.Year))
+            .attr("cy", data => timeScale(data.Time))
+            .attr("data-xvalue", data => data.Year)
+            .attr("data-yvalue", data => data.Time.toISOString())
+            .attr("transform", `translate(0, ${ margin.top })`)
+            ;
     })
     .catch(error => {
         throw error;
