@@ -10,8 +10,8 @@ function onDOMContentLoaded() {
             item.Time = new Date(Date.UTC(2021, 0, 1, 0, splitTime[0], splitTime[1]));
             return item;
         });
-        console.log(dataSet);
         const timeFormat = d3.timeFormat("%M:%S");
+        const color = d3.scaleOrdinal(d3.schemeCategory10);
 
         // SVG Props
         const margin = {
@@ -28,6 +28,10 @@ function onDOMContentLoaded() {
             .append("svg")
             .attr("width", width)
             .attr("height", height);
+        
+        // aux elements
+        const tooltip = document.getElementById("tooltip");
+        const tooltipBreak = document.getElementById("tooltip-break");
         
         // x axis
         const yearMin = d3.min(dataSet, item => item.Year) - 1;
@@ -60,6 +64,39 @@ function onDOMContentLoaded() {
             .attr("transform", `translate(${ margin.left }, ${ margin.top })`);
         
         // dots
+        const dotMouseOverHandler = (e) => {
+            const dot = e.target;
+            const index = parseInt(dot.getAttribute("key"));
+            const item = dataSet[index];
+
+            const tooltipName = document.getElementById("tooltip-name");
+            tooltipName.textContent = `${ item.Name } (${ item.Nationality })`;
+            const tooltipTime = document.getElementById("tooltip-time");
+            tooltipTime.textContent = `Year: ${ item.Year } - Time ${ item.Time.getMinutes() }:${ item.Time.getSeconds() }`;
+            const tooltipDoping = document.getElementById("tooltip-doping");
+            tooltipDoping.textContent = `${ item.Doping }`;
+
+            if (item.Doping) {
+                tooltipBreak.style.display = "block";
+            } else {
+                tooltipBreak.style.display = "none";
+            }
+
+            const x = dot.getBoundingClientRect().left + 20;
+            const y = dot.getBoundingClientRect().top;
+
+            tooltip.setAttribute("data-year", item.Year); 
+            tooltip.style.left = `${ x }px`;
+            tooltip.style.top = `${ y }px`;
+            tooltip.classList.remove("hidden");
+            tooltip.classList.add("visible");
+        }
+
+        const dotMouseOutHandler = (e) => {
+            tooltip.classList.remove("visible");
+            tooltip.classList.add("hidden");
+        }
+
         svg.selectAll(".dot")
             .data(dataSet)
             .enter()
@@ -71,7 +108,35 @@ function onDOMContentLoaded() {
             .attr("data-xvalue", data => data.Year)
             .attr("data-yvalue", data => data.Time.toISOString())
             .attr("transform", `translate(0, ${ margin.top })`)
-            ;
+            .attr("key", (data, index) => index)
+            .style("fill", data => color(data.Doping !== ""))
+            .on("mouseover", dotMouseOverHandler)
+            .on("mouseout", dotMouseOutHandler);  
+        
+        // legend
+        const legendGroup = svg.append("g")
+            .attr("id", "legend");
+        
+        const legend = legendGroup.selectAll("#legend")
+            .data(color.domain())
+            .enter()
+            .append("g")
+            .attr("class", "legend-label")
+            .attr("transform", (data, index) => `translate(0, ${ height / 2 - index * 20 })`);
+
+        legend.append("rect")
+            .attr("x", width - 10)
+            .attr("width", 10)
+            .attr("height", 10)
+            .style("fill", color);
+        
+        legend.append("text")
+            .attr("x", width - 15)
+            .attr("y", 9)
+            .style("text-anchor", "end")
+            .style("font-size", ".6rem")
+            .style("font-family", "Arial, Helvetica, sans-serif")
+            .text(data => data ? "Riders with doping allegations" : "No doping allegations");
     })
     .catch(error => {
         throw error;
