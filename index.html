@@ -38,26 +38,30 @@
                     <li>
                         <a class="project-link" key="02">Scatterplot Graph</a>
                     </li>
+                    <li>
+                        <a class="project-link" key="03">Heat Map</a>
+                    </li>
                 </ul>
             </section>
         </main>
         <script>
             const links = {
                 "01": "/bar-chart",
-                "02": "/scatterplot-graph"
+                "02": "/scatterplot-graph",
+                "03": "/heat-map"
             }
 
             document.addEventListener("DOMContentLoaded", () => {
                 const repoName = "/fcc-data-visualization";
                 const validHostnames = ["carlosjasso.github.io", "carlosjasso.dev"];
-                const branch = validHostnames.includes(window.location.hostname) ? repoName : "";
-                
+                const dir = validHostnames.includes(window.location.hostname) ? repoName : "";
+
                 const anchors = document.getElementsByClassName("project-link");
                 
                 for (let index = 0; index < anchors.length; index++) {
                     const anchor = anchors[index];
                     const anchorKey = anchor.getAttribute("key");
-                    const href = `${ branch }${ links[anchorKey] }`;
+                    const href = `${ dir }${ links[anchorKey] }`;
                     
                     anchor.setAttribute("href", href);
                 }

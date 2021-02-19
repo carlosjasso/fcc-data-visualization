@@ -1,0 +1,58 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #462255;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-width: 100vw;
+}
+
+.graph-container {
+    background: white;
+    border-radius: 5px;
+}
+
+.graph-heading {
+    text-align: center;
+}
+
+.cell {
+    transition: 0.15s;
+}
+
+.cell:hover {
+    opacity: 0.6;
+}
+
+.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 8px 12px;
+    background: black;
+    color: white;
+    opacity: 0.7;
+    border-radius: 5px;
+    box-shadow: 0px 0px 16px 4px rgba(0,0,0,0.5);
+    width: 92px;
+    height: 62px;
+}
+
+.source {
+    margin-top: 8px;
+}
+
+.icon-source {
+    color: #cecece;
+    width: 36px;
+    transition: 0.3s;
+}
+
+.icon-source:hover {
+    color: white;
+}
