@@ -148,7 +148,6 @@ function onDOMContentLoaded() {
             .on("mouseover", (item, index) => {
                 const rect = document.querySelector(`#map-data-item${index}`);
                 const rectPos = rect.getBoundingClientRect();
-                console.log(rectPos);
 
                 const tipDate = `${item["year"]} - ${tipMonthFormatter(new Date(0, item["month"]))}`;
                 tooltip.querySelector("#tip-date").textContent = tipDate;
@@ -209,7 +208,7 @@ function onDOMContentLoaded() {
     })
     .catch(error => {
         console.error(error);
-        // alert("There's been an error and it's been logged into the console.")
+        alert("There's been an error and it's been logged into the console.");
     });
 }
 
